@@ -1,0 +1,323 @@
+---
+title: "Untitled"
+author: "Erlangga"
+date: "2025-10-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(readr)
+library(dplyr)
+library(stringr)
+library(sf)
+library(leaflet)
+library(htmltools)
+library(leafem)
+library(htmlwidgets)
+
+# Read ASC data
+ASC_data <- read_csv("ASC.csv", show_col_types = FALSE)
+
+# Prepare popup content with HTML links
+ASC_data <- ASC_data %>%
+  mutate(
+    popup_content = paste0(
+      "<strong>", `Company Holding`, "</strong><br/>",
+      "Certification ID: ", `Certification ID`, "<br/>",
+      "Standard: ", Standard, "<br/>",
+      "Status: ", Status, "<br/>",
+      "Certified sites: ", `Certified sites`, "<br/>",
+      "<a href='", Link, "' target='_blank'>Website</a>"
+    )
+  )
+
+# Create Leaflet map with circle markers
+leaflet_map <- leaflet(ASC_data) %>%
+  addTiles() %>%
+  
+  # Add circle markers with popup and persistent label
+  addCircleMarkers(
+    lng = ~Longitude,
+    lat = ~Latitude,
+    popup = ~popup_content,
+    labelOptions = labelOptions(noHide = TRUE, direction = "auto"),
+    radius = 6,            # circle size
+    color = "blue",        # border color
+    fillColor = "lightblue", # fill color
+    fillOpacity = 0.7,
+    group = "ASC Sites"
+  ) %>%
+  
+  # Add layer control to toggle circle marker group
+  addLayersControl(
+    overlayGroups = c("ASC Sites"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) %>%
+  
+  # Add mouse coordinate display
+  addMouseCoordinates() %>%
+  
+  # Add minimap in bottom left corner
+  addMiniMap(tiles = providers$OpenStreetMap, position = "bottomleft")
+
+# Show map
+leaflet_map
+
+
+```
+
+```{r}
+library(readr)
+library(dplyr)
+library(stringr)
+library(sf)
+library(leaflet)
+library(htmltools)
+library(leafem)
+library(htmlwidgets)
+
+# Read AIP data
+AIP_data <- read_csv("AIP_Detail.csv", show_col_types = FALSE)
+
+# Prepare popup content with HTML links
+# Handle multiple links by substituting newlines with <br> in HTML
+AIP_data <- AIP_data %>%
+  mutate(
+    popup_content = paste0(
+      "<strong>", Company, "</strong><br/>",
+      "AIP Code: ", `Aip Code`, "<br/>",
+      "Status: ", Status, "<br/>",
+      "Active Phase: ", `Active Phase`, "<br/>",
+      "Start Date: ", `Start Date`, "<br/>",
+      "End Date: ", `End Date`, "<br/>",
+      "Species Group: ", `Species Group`, "<br/>",
+      "Improvement Scope: ", `Improvement Scope`, "<br/>",
+      "Partners: ", Partners, "<br/>",
+      "Links:<br/>", str_replace_all(Link, "\n", "<br/>")
+    )
+  )
+
+# Create Leaflet map
+leaflet_map1 <- leaflet(AIP_data) %>%
+  addTiles() %>%
+  
+  addCircleMarkers(
+    lng = ~Longitude,
+    lat = ~Latitude,
+    popup = ~popup_content,
+    labelOptions = labelOptions(noHide = TRUE, direction = "auto"),
+    radius = 6,
+    color = "#004D40",
+    fillColor = "#FFDA66",
+    fillOpacity = 0.7,
+    group = "AIP Sites"
+  ) %>%
+  
+  addLayersControl(
+    overlayGroups = c("AIP Sites"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) %>%
+  
+  addMouseCoordinates() %>%
+  
+  addMiniMap(tiles = providers$OpenStreetMap, position = "bottomleft")
+
+leaflet_map1
+
+```
+
+```{r}
+library(readr)
+library(dplyr)
+library(stringr)
+library(sf)
+library(leaflet)
+library(htmltools)
+library(leafem)
+library(htmlwidgets)
+
+# Read AIP data from uploaded CSV
+AIP_data <- read_csv("AIP_program.csv", show_col_types = FALSE)
+
+# Prepare popup content with HTML links
+AIP_data <- AIP_data %>%
+  mutate(
+    popup_content = paste0(
+      "<strong>", `Program Name`, "</strong><br/>",
+      "Farmers: ", Farmers, "<br/>",
+      "AIP Stage: ", `AIP Stage`, "<br/>",
+      "Participants: ", Participants, "<br/>",
+      "More Information:<br/><a href='", `More Information`, "' target='_blank'>Link</a>"
+    )
+  )
+
+# Create Leaflet map
+leaflet_map2 <- leaflet(AIP_data) %>%
+  addTiles() %>%
+  
+  addCircleMarkers(
+    lng = ~Longitude,
+    lat = ~Latitude,
+    popup = ~popup_content,
+    labelOptions = labelOptions(noHide = TRUE, direction = "auto"),
+    radius = 6,
+    color = "#990099",
+    fillColor = "#7873C0",
+    fillOpacity = 0.7,
+    group = "AIP Sites"
+  ) %>%
+  
+  addLayersControl(
+    overlayGroups = c("AIP Sites"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) %>%
+  
+  addMouseCoordinates() %>%
+  
+  addMiniMap(tiles = providers$OpenStreetMap, position = "bottomleft")
+
+leaflet_map2
+
+```
+
+
+```{r}
+library(readr)
+library(dplyr)
+library(stringr)
+library(sf)
+library(leaflet)
+library(htmltools)
+library(leafem)
+library(htmlwidgets)
+
+# Read ASC data
+ASC_data <- read_csv("ASC.csv", show_col_types = FALSE)
+
+ASC_data <- ASC_data %>%
+  mutate(
+    popup_content = paste0(
+      "<strong>", `Company Holding`, "</strong><br/>",
+      "Certification ID: ", `Certification ID`, "<br/>",
+      "Standard: ", Standard, "<br/>",
+      "Status: ", Status, "<br/>",
+      "Certified sites: ", `Certified sites`, "<br/>",
+      "<a href='", Link, "' target='_blank'>Website</a>"
+    )
+  )
+
+# Read AIP Detail data
+AIP_detail_data <- read_csv("AIP_Detail.csv", show_col_types = FALSE)
+
+AIP_detail_data <- AIP_detail_data %>%
+  mutate(
+    popup_content = paste0(
+      "<strong>", Company, "</strong><br/>",
+      "AIP Code: ", `Aip Code`, "<br/>",
+      "Status: ", Status, "<br/>",
+      "Active Phase: ", `Active Phase`, "<br/>",
+      "Start Date: ", `Start Date`, "<br/>",
+      "End Date: ", `End Date`, "<br/>",
+      "Species Group: ", `Species Group`, "<br/>",
+      "Improvement Scope: ", `Improvement Scope`, "<br/>",
+      "Partners: ", Partners, "<br/>",
+      "Links:<br/>", str_replace_all(Link, "\n", "<br/>")
+    )
+  )
+
+# Read AIP Program data
+AIP_program_data <- read_csv("AIP_program.csv", show_col_types = FALSE)
+
+AIP_program_data <- AIP_program_data %>%
+  mutate(
+    popup_content = paste0(
+      "<strong>", `Program Name`, "</strong><br/>",
+      "Farmers: ", Farmers, "<br/>",
+      "AIP Stage: ", `AIP Stage`, "<br/>",
+      "Participants: ", Participants, "<br/>",
+      "More Information:<br/><a href='", `More Information`, "' target='_blank'>Link</a>"
+    )
+  )
+
+# Create combined Leaflet map with all datasets
+leaflet_map_combined <- leaflet() %>%
+  addTiles() %>%
+  
+  # ASC circle markers
+  addCircleMarkers(
+    data = ASC_data,
+    lng = ~Longitude,
+    lat = ~Latitude,
+    popup = ~popup_content,
+    labelOptions = labelOptions(noHide = TRUE, direction = "auto"),
+    radius = 6,
+    color = "blue",
+    fillColor = "lightblue",
+    fillOpacity = 0.7,
+    group = "ASC Sites"
+  ) %>%
+  
+  # AIP Detail circle markers
+  addCircleMarkers(
+    data = AIP_detail_data,
+    lng = ~Longitude,
+    lat = ~Latitude,
+    popup = ~popup_content,
+    labelOptions = labelOptions(noHide = TRUE, direction = "auto"),
+    radius = 6,
+    color = "#004D40",
+    fillColor = "#FFDA66",
+    fillOpacity = 0.7,
+    group = "AIP Detail Sites"
+  ) %>%
+  
+  # AIP Program circle markers
+  addCircleMarkers(
+    data = AIP_program_data,
+    lng = ~Longitude,
+    lat = ~Latitude,
+    popup = ~popup_content,
+    labelOptions = labelOptions(noHide = TRUE, direction = "auto"),
+    radius = 6,
+    color = "#990099",
+    fillColor = "#7873C0",
+    fillOpacity = 0.7,
+    group = "AIP Program Sites"
+  ) %>%
+  
+  # Layer controls for toggling groups
+  addLayersControl(
+    overlayGroups = c("ASC Sites", "AIP Detail Sites", "AIP Program Sites"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) %>%
+  
+  # Legend for site types
+  addLegend(
+    position = "bottomright",
+    colors = c("lightblue", "#FFDA66", "#7873C0"),
+    labels = c("ASC Sites", "AIP Detail Sites", "AIP Program Sites"),
+    opacity = 0.7,
+    title = "Site Types"
+  ) %>%
+  
+  addMouseCoordinates() %>%
+  addMiniMap(tiles = providers$OpenStreetMap, position = "bottomleft")
+
+leaflet_map_combined
+
+
+
+# Save
+
+saveWidget(leaflet_map_combined,
+           file = "index.html",
+           selfcontained = TRUE,
+           libdir = "Combined_map_files")
+
+```
+
